@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/fabkho/conductor/compare/pi-multirepo-0.4.0...pi-multirepo-0.4.1) (2026-05-30)
+
+
+### Bug Fixes
+
+* use scoped package name @fabkho/conductor ([f59c829](https://github.com/fabkho/conductor/commit/f59c829b6e577afac2a0de2985db0013949439fd))
+
 ## [0.4.0](https://github.com/fabkho/conductor/compare/pi-multirepo-0.3.1...pi-multirepo-0.4.0) (2026-05-30)
 
 

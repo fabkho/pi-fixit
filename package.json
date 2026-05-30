@@ -1,6 +1,6 @@
 {
   "name": "@fabkho/conductor",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "description": "Task-to-MR delivery pipeline — worktrees, issue trackers, and merge requests in one command",
   "keywords": [
