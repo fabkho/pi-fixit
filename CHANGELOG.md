@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.0](https://github.com/fabkho/conductor/compare/pi-multirepo-0.3.1...pi-multirepo-0.4.0) (2026-05-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* command names changed
+
+### Features
+
+* rename to conductor ([2886236](https://github.com/fabkho/conductor/commit/2886236bc7bc3041b655036299c57c56a253327c))
+
 ## [0.3.1](https://github.com/fabkho/pi-multirepo/compare/pi-multirepo-0.3.0...pi-multirepo-0.3.1) (2026-05-01)
 
 
