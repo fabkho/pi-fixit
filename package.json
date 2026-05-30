@@ -1,15 +1,19 @@
 {
-  "name": "pi-multirepo",
-  "version": "0.3.1",
+  "name": "conductor",
+  "version": "0.4.0",
   "type": "module",
-  "description": "Pi extension for multi-repo tasks — worktrees, MRs, and tracker integration in one command",
+  "description": "Task-to-MR delivery pipeline — worktrees, issue trackers, and merge requests in one command",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "omp-package",
+    "coding-agent",
+    "git",
+    "workflow"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fabkho/pi-multirepo.git"
+    "url": "git+https://github.com/fabkho/conductor.git"
   },
   "files": [
     "extension",
@@ -19,6 +23,14 @@
     "skills",
     "configs"
   ],
+  "omp": {
+    "extensions": [
+      "./extension/index.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
   "pi": {
     "extensions": [
       "./extension/index.ts"
@@ -35,7 +47,21 @@
     "@mariozechner/pi-agent-core": "*",
     "@mariozechner/pi-coding-agent": "*",
     "@mariozechner/pi-tui": "*",
+    "@oh-my-pi/pi-ai": "*",
+    "@oh-my-pi/pi-agent-core": "*",
+    "@oh-my-pi/pi-coding-agent": "*",
+    "@oh-my-pi/pi-tui": "*",
     "typebox": "*"
+  },
+  "peerDependenciesMeta": {
+    "@mariozechner/pi-ai": { "optional": true },
+    "@mariozechner/pi-agent-core": { "optional": true },
+    "@mariozechner/pi-coding-agent": { "optional": true },
+    "@mariozechner/pi-tui": { "optional": true },
+    "@oh-my-pi/pi-ai": { "optional": true },
+    "@oh-my-pi/pi-agent-core": { "optional": true },
+    "@oh-my-pi/pi-coding-agent": { "optional": true },
+    "@oh-my-pi/pi-tui": { "optional": true }
   },
   "devDependencies": {
     "@mariozechner/pi-ai": "^0.70.5",

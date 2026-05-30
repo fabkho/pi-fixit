@@ -56,7 +56,7 @@ export interface IssueTrackerConfig {
   type: "clickup" | "headless";
   /** Prefix for branch names (e.g., "CU-" for ClickUp, "LIN-" for Linear). Default: none */
   branchPrefix?: string;
-  /** Status to set when /multirepo-merge runs (e.g., "code review", "done"). Default: none (skip status update) */
+  /** Status to set when /conductor-merge runs (e.g., "code review", "done"). Default: none (skip status update) */
   doneStatus?: string;
   /** Adapter-specific config — keyed by type name */
   [adapterType: string]: unknown;
@@ -92,7 +92,7 @@ export interface ResolvedConfig extends Omit<ProjectConfig, "repos"> {
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
-const CONFIG_DIR = join(homedir(), ".config", "pi-multirepo");
+const CONFIG_DIR = join(homedir(), ".config", "conductor");
 const LEGACY_CONFIG_DIR = join(homedir(), ".config", "pi-multifix");
 
 /** Default branch prefixes per tracker type (for automation triggers) */

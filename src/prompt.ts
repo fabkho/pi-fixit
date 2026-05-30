@@ -23,7 +23,7 @@ export function loadTemplate(templatePath?: string): string {
 // ── Render ───────────────────────────────────────────────────────────
 
 /**
- * Render the system prompt for a multirepo agent session.
+ * Render the system prompt for a conductor agent session.
  *
  * Loads the markdown template (custom or default), substitutes all
  * `{{variable}}` placeholders, and conditionally includes/excludes

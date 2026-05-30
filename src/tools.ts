@@ -50,7 +50,7 @@ export function registerCreateMrTool(
     async execute(toolCallId, params, signal) {
       const state = getState();
       if (!state) {
-        throw new Error("Multirepo session not active — run /multirepo first");
+        throw new Error("Conductor session not active — run /conductor first");
       }
 
       const { config, task, workspacePaths } = state;
@@ -279,7 +279,7 @@ export function registerUpdateIssueTool(
     async execute(toolCallId, params) {
       const state = getState();
       if (!state) {
-        throw new Error("Multirepo session not active — run /multirepo first");
+        throw new Error("Conductor session not active — run /conductor first");
       }
 
       const { task } = state;
@@ -294,7 +294,7 @@ export function registerUpdateIssueTool(
         };
       }
 
-      // Buffer the comment and status — both will be posted to the tracker only after MRs are merged via /multirepo-merge
+      // Buffer the comment and status — both will be posted to the tracker only after MRs are merged via /conductor-merge
       state.pendingComment = params.comment;
       state.pendingStatus = params.status ?? null;
 
@@ -305,7 +305,7 @@ export function registerUpdateIssueTool(
         content: [
           {
             type: "text" as const,
-            text: `Buffered ${buffered.join(" and ")} — will be posted to ${task.url} after MRs are merged via /multirepo-merge.`,
+            text: `Buffered ${buffered.join(" and ")} — will be posted to ${task.url} after MRs are merged via /conductor-merge.`,
           },
         ],
         details: { skipped: false as boolean, taskId: task.id as string | undefined, buffered: true as boolean },
