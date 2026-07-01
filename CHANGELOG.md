@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.5](https://github.com/fabkho/pi-fixit/compare/pi-fixit-0.5.4...pi-fixit-0.5.5) (2026-07-01)
+
+
+### Bug Fixes
+
+* trigger pi-fixit publish with new token ([efef51d](https://github.com/fabkho/pi-fixit/commit/efef51d46acc38b263c6f97567067f820e4256ce))
+
 ## [0.5.4](https://github.com/fabkho/pi-fixit/compare/pi-fixit-0.5.3...pi-fixit-0.5.4) (2026-07-01)
 
 
