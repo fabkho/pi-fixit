@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.4](https://github.com/fabkho/pi-fixit/compare/pi-fixit-0.5.3...pi-fixit-0.5.4) (2026-07-01)
+
+
+### Bug Fixes
+
+* trigger fresh pi-fixit publish ([3b1ddf4](https://github.com/fabkho/pi-fixit/commit/3b1ddf47c27f36800a36537b0a79c2643a7f5e62))
+
 ## [0.5.3](https://github.com/fabkho/pi-fixit/compare/pi-fixit-0.5.2...pi-fixit-0.5.3) (2026-07-01)
 
 
