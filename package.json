@@ -1,6 +1,6 @@
 {
   "name": "pi-fixit",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "type": "module",
   "description": "Bug-fix delivery pipeline — ClickUp ticket in, worktrees + MR out",
   "keywords": [

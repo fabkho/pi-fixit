@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/fabkho/pi-fixit/compare/pi-fixit-0.5.2...pi-fixit-0.5.3) (2026-07-01)
+
+
+### Features
+
+* trigger pi-fixit release via CI ([fb865c5](https://github.com/fabkho/pi-fixit/commit/fb865c5a5a1bf29d6bc439eb9f54e3b462a95e60))
+
 ## [0.5.2](https://github.com/fabkho/conductor/compare/pi-conductor-0.5.1...pi-conductor-0.5.2) (2026-07-01)
 
 
