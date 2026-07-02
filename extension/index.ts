@@ -1,9 +1,9 @@
 /**
- * conductor — Pi extension for multi-repo tasks.
+ * fixit — Pi extension for multi-repo tasks.
  *
  * Registers:
- *   /conductor <task-id|text> [repo=<name>] [--project <name>] [extra context...]
- *   /conductor-merge [comment] — merge MRs, update tracker
+ *   /fixit <task-id|text> [repo=<name>] [--project <name>] [extra context...]
+ *   /fixit-merge [comment] — merge MRs, update tracker
  *   create_mr tool
  *   update_issue tool
  */
@@ -72,7 +72,7 @@ export default function (pi: ExtensionAPI) {
 
     // Scan current branch entries for persisted task state
     for (const entry of ctx.sessionManager.getBranch()) {
-      if (entry.type === "custom" && entry.customType === "conductor-state-v2") {
+      if (entry.type === "custom" && entry.customType === "fixit-state-v2") {
         try {
           const persisted = entry.data as PersistedState;
           const config = resolveConfig(persisted.projectName);
@@ -102,8 +102,8 @@ export default function (pi: ExtensionAPI) {
   pi.on("session_shutdown", async (_event, ctx) => {
     state = null;
     if (ctx.hasUI) {
-      ctx.ui.setStatus("conductor", undefined);
-      ctx.ui.setWidget("conductor-state", undefined);
+      ctx.ui.setStatus("fixit", undefined);
+      ctx.ui.setWidget("fixit-state", undefined);
     }
   });
 
@@ -132,7 +132,7 @@ export default function (pi: ExtensionAPI) {
       : "";
 
     ctx.ui.setStatus(
-      "conductor",
+      "fixit",
       theme.fg("accent", "🔧 ") +
       theme.fg("dim", taskLabel) +
       theme.fg("muted", ` | ${repos}`) +
@@ -140,7 +140,7 @@ export default function (pi: ExtensionAPI) {
     );
 
     // Widget: one persistent line above the editor
-    ctx.ui.setWidget("conductor-state", (_tui: any, theme: any) => ({
+    ctx.ui.setWidget("fixit-state", (_tui: any, theme: any) => ({
       render(width: number): string[] {
         if (!state) return [];
         const id = !state.task.id.startsWith("headless") ? state.task.id + " " : "";
@@ -181,21 +181,21 @@ export default function (pi: ExtensionAPI) {
       pendingComment: state.pendingComment,
       pendingStatus: state.pendingStatus,
     };
-    pi.appendEntry("conductor-state-v2", persisted);
+    pi.appendEntry("fixit-state-v2", persisted);
   }
 
-  // ── /conductor command ────────────────────────────────────────────
-  pi.registerCommand("conductor", {
+  // ── /fixit command ────────────────────────────────────────────
+  pi.registerCommand("fixit", {
     description:
       "Work on a task across repos. Usage:\n" +
-      "  /conductor CU-12345\n" +
-      "  /conductor CU-12345 repo=frontend \"Extra context\"\n" +
-      '  /conductor "The booking modal crashes on save"\n' +
-      "  /conductor --project other CU-99999",
+      "  /fixit CU-12345\n" +
+      "  /fixit CU-12345 repo=frontend \"Extra context\"\n" +
+      '  /fixit "The booking modal crashes on save"\n' +
+      "  /fixit --project other CU-99999",
     handler: async (args, ctx) => {
       if (!args?.trim()) {
         ctx.ui.notify(
-          "Usage: /conductor <task-id|URL|text> [repo=<name>] [--project <name>] [context...]",
+          "Usage: /fixit <task-id|URL|text> [repo=<name>] [--project <name>] [context...]",
           "warning",
         );
         return;
@@ -277,20 +277,20 @@ export default function (pi: ExtensionAPI) {
         );
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        ctx.ui.notify(`/conductor error: ${msg}`, "error");
+        ctx.ui.notify(`/fixit error: ${msg}`, "error");
       }
     },
   });
 
-  // ── /conductor-merge command ───────────────────────────────────────
-  pi.registerCommand("conductor-merge", {
+  // ── /fixit-merge command ───────────────────────────────────────
+  pi.registerCommand("fixit-merge", {
     description:
       "Merge MR(s), update issue tracker, and optionally leave a comment.\n" +
-      "  /conductor-merge\n" +
-      '  /conductor-merge "Went with the simple fix, no backend needed"',
+      "  /fixit-merge\n" +
+      '  /fixit-merge "Went with the simple fix, no backend needed"',
     handler: async (args, ctx) => {
       if (!state) {
-        ctx.ui.notify("No active conductor session. Run /conductor first.", "error");
+        ctx.ui.notify("No active fixit session. Run /fixit first.", "error");
         return;
       }
 
@@ -440,10 +440,10 @@ export default function (pi: ExtensionAPI) {
       if (ctx.hasUI) {
         const theme = ctx.ui.theme;
         if (mergeSuccess && !hooksSkipped) {
-          ctx.ui.setStatus("conductor", theme.fg("success", "✓ ") + theme.fg("dim", "conductor done"));
-          ctx.ui.setWidget("conductor-state", undefined);
+          ctx.ui.setStatus("fixit", theme.fg("success", "✓ ") + theme.fg("dim", "fixit done"));
+          ctx.ui.setWidget("fixit-state", undefined);
         } else {
-          ctx.ui.setStatus("conductor", theme.fg("error", "✗ ") + theme.fg("dim", "merge incomplete — check results"));
+          ctx.ui.setStatus("fixit", theme.fg("error", "✗ ") + theme.fg("dim", "merge incomplete — check results"));
         }
       }
 
@@ -466,7 +466,7 @@ export default function (pi: ExtensionAPI) {
 
     if (event.toolName === "update_issue") {
       // pendingComment/pendingStatus were already set by the tool execute;
-      // persist now so a reload before /conductor-merge doesn't lose them
+      // persist now so a reload before /fixit-merge doesn't lose them
       persistState();
     }
 

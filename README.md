@@ -1,37 +1,38 @@
-# pi-multirepo
+# pi-fixit
 
-A [pi](https://github.com/badlogic/pi-mono) extension for working across multiple repositories. Fetches tasks from ClickUp (or free-text), creates isolated git worktree workspaces, implements the changes, runs pre-MR hooks, creates merge requests, and runs post-merge hooks (tracker comments, status updates, custom scripts).
+A [pi](https://pi.dev) extension for bug-fix delivery across multiple repositories. Give it a ClickUp task ID or a free-text description, and it creates isolated git worktrees, implements the fix, creates merge requests, and runs post-merge hooks.
 
 ## Features
 
-- **Multi-repo** — works across multiple repositories in a single session using absolute paths
+- **Bug-fix workflow** — ClickUp ID or free-text description → worktrees → fix → MR → merged
+- **Multi-repo** — works across frontend + backend repos with absolute paths
 - **ClickUp integration** — fetches task details, posts MR links after merge, updates task status
-- **Headless mode** — describe a task in free text without an issue tracker
+- **Headless mode** — describe a bug in free text without an issue tracker
 - **Git worktree isolation** — each task gets its own branches, your working copy stays clean
 - **Auto-symlinks** — `node_modules` and `vendor/` symlinked from main repo for instant setup
 - **preMRHooks** — per-repo hooks (linters, formatters, tests) run before each `create_mr`
-- **postMergeHooks** — project-level hooks after `/multirepo-merge` (tracker comments, status updates, shell scripts)
+- **postMergeHooks** — project-level hooks after `/fixit-merge` (tracker comments, status updates, shell scripts)
 - **State widget** — persistent display above the editor showing task, repos, and MR progress
 - **MR/PR creation** — `create_mr` tool pushes and opens merge requests via `glab` (GitLab) or `gh` (GitHub)
 - **Scout subagents** — delegates research to cheaper/faster models via the `Agent` tool
 - **Project configs** — YAML-based per-project configuration, reusable across different multi-repo setups
-- **Session persistence** — multirepo state survives reloads and session resume
+- **Session persistence** — fixit state survives reloads and session resume
 
 ## Install
 
 ```bash
-pi install npm:pi-multirepo
+pi install pi-fixit
 ```
 
 Or from git:
 
 ```bash
-pi install git:github.com/fabkho/pi-multirepo
+pi install git:github.com/fabkho/pi-fixit
 ```
 
 ### Prerequisites
 
-- [pi](https://github.com/badlogic/pi-mono)
+- [pi](https://pi.dev)
 - `glab` (GitLab CLI) and/or `gh` (GitHub CLI) installed and authenticated
 - `CLICKUP_API_TOKEN` environment variable set (for ClickUp mode)
 
@@ -39,56 +40,54 @@ pi install git:github.com/fabkho/pi-multirepo
 
 ```bash
 # 1. Create your project config
-mkdir -p ~/.config/pi-multirepo
-cp configs/anny.yaml ~/.config/pi-multirepo/my-project.yaml
+mkdir -p ~/.config/pi-fixit
+cp configs/anny.yaml ~/.config/pi-fixit/my-project.yaml
 # Edit with your repos, paths, tokens
 
 # 2. Set a default project (optional — avoids --project flag)
-echo "my-project" > ~/.config/pi-multirepo/default
+echo "my-project" > ~/.config/pi-fixit/default
 ```
 
 ## Usage
 
-### Start a task
+### Start a bug-fix task
 
 ```
-/multirepo CU-12345                                          # ClickUp task ID
-/multirepo CU-12345 repo=frontend                            # hint which repo is affected
-/multirepo CU-12345 repo=backend "The API returns 500"       # with extra context
-/multirepo https://app.clickup.com/t/86abc123                # ClickUp URL
-/multirepo "Add dark mode toggle to settings page"           # headless mode (no tracker)
-/multirepo --project other-project CU-99999                  # different project config
+/fixit CU-12345                                          # ClickUp task ID
+/fixit CU-12345 repo=frontend                            # hint which repo is affected
+/fixit CU-12345 repo=backend "The API returns 500"       # with extra context
+/fixit https://app.clickup.com/t/86abc123                # ClickUp URL
+/fixit "Add dark mode toggle to settings page"           # headless mode (no tracker)
+/fixit --project other-project CU-99999                  # different project config
 ```
 
 ### Merge and run post-merge hooks
 
 ```
-/multirepo-merge                                             # merge MR(s), run postMergeHooks
-/multirepo-merge "Simple i18n fix, no backend changes"       # append a note to the tracker comment
+/fixit-merge                                              # merge MR(s), run postMergeHooks
+/fixit-merge "Simple i18n fix, no backend changes"        # append a note to the tracker comment
 ```
 
-Merges all MR(s) created in the session, then runs `postMergeHooks` in order. Any note passed to `/multirepo-merge` is appended to the tracker comment.
+Merges all MR(s) created in the session, then runs `postMergeHooks` in order. Any note passed to `/fixit-merge` is appended to the tracker comment.
 
-> **Note:** `update_issue` does **not** post to the tracker immediately — it buffers the comment until `/multirepo-merge` runs. This ensures nothing is posted before the changes are actually merged.
+## What happens when you run `/fixit`
 
-## What happens when you run `/multirepo`
-
-1. **Loads project config** from `~/.config/pi-multirepo/<project>.yaml`
+1. **Loads project config** from `~/.config/pi-fixit/<project>.yaml`
 2. **Fetches the task** from ClickUp (or creates a headless task from your text)
 3. **Creates worktrees** for each repo on a fresh branch
 4. **Symlinks** `node_modules` and `vendor/` from the main repos
 5. **Shows the state widget** — task ID, title, repos, MR progress
 6. **Injects a system prompt** with repo paths, codebase conventions, and workflow instructions
 7. **The agent analyzes** the task across all repos
-8. **Implements the changes**, using scout subagents for research to keep context lean
-9. **Runs preMRHooks** (linters, formatters, tests) per repo before committing
+8. **Implements the changes**, using scout subagents for research
+9. **Runs preMRHooks** per repo before committing
 10. **Creates MR(s)** via `glab mr create` / `gh pr create`
 11. **Buffers the tracker comment** — `update_issue` stores the comment in session state
-12. **`/multirepo-merge`** merges all MRs, then runs `postMergeHooks`
+12. **`/fixit-merge`** merges all MRs, then runs `postMergeHooks`
 
 ## Project Config
 
-YAML config files live at `~/.config/pi-multirepo/<name>.yaml`.
+YAML config files live at `~/.config/pi-fixit/<name>.yaml`.
 
 ### Minimal config
 
@@ -137,7 +136,7 @@ repos:
       - cmd: ./vendor/bin/phpstan
         args: [analyse, --memory-limit=2G]
 
-postMergeHooks:                       # run after /multirepo-merge
+postMergeHooks:                       # run after /fixit-merge
   - type: clickup-comment             # posts the comment the agent wrote via update_issue
   - type: clickup-status
     status: code review
@@ -172,7 +171,7 @@ preMRHooks:
 
 #### postMergeHooks (project level)
 
-Run after `/multirepo-merge` successfully merges all MRs. Supports built-in types and shell commands:
+Run after `/fixit-merge` successfully merges all MRs.
 
 | Type | Description |
 |------|-------------|
@@ -205,8 +204,8 @@ postMergeHooks:
 ### Config resolution order
 
 1. `--project <name>` flag on the command
-2. `MULTIREPO_PROJECT` environment variable
-3. `~/.config/pi-multirepo/default` file contents
+2. `FIXIT_PROJECT` environment variable
+3. `~/.config/pi-fixit/default` file contents
 
 ### Context files
 
@@ -219,14 +218,14 @@ Each repo can specify `contextFiles` — paths relative to the repo root (e.g., 
 | `clickup` | Task ID, CU-prefix, or URL | Fetches from ClickUp API, posts comments, updates status |
 | `headless` | Quoted free text | No tracker — just a description. `addComment`/`updateStatus` are no-ops |
 
-Adding new adapters (GitHub Issues, Linear, Jira) means implementing the `IssueAdapter` interface in `src/adapters/`. PRs welcome!
+Add new adapters (GitHub Issues, Linear, Jira) by implementing the `IssueAdapter` interface in `src/adapters/`.
 
 ## Tools registered
 
 | Tool | Description |
 |------|-------------|
 | `create_mr` | Run preMRHooks + commit + push + open MR/PR for a repo |
-| `update_issue` | Buffer a tracker comment — posted when `/multirepo-merge` runs the `clickup-comment` hook |
+| `update_issue` | Buffer a tracker comment — posted when `/fixit-merge` runs the `clickup-comment` hook |
 
 ## License
 
